@@ -8,7 +8,7 @@
     <AssemblyName>ChatGPTWatchdog</AssemblyName>
     <RootNamespace>ChatGPTWatchdog</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>..\..\assets\chatgpt-watchdog.ico</ApplicationIcon>
     <DebugType>embedded</DebugType>
   </PropertyGroup>
 </Project>
-

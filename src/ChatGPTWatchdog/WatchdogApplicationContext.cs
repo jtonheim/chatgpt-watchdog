@@ -8,6 +8,7 @@ internal sealed class WatchdogApplicationContext : ApplicationContext
 
     private readonly SettingsStore _settingsStore = new();
     private readonly WatchdogSettings _settings;
+    private readonly Icon _appIcon;
     private readonly NotifyIcon _trayIcon;
     private readonly ToolStripMenuItem _statusItem;
     private readonly ToolStripMenuItem _monitorItem;
@@ -18,6 +19,7 @@ internal sealed class WatchdogApplicationContext : ApplicationContext
     public WatchdogApplicationContext()
     {
         _settings = _settingsStore.Load();
+        _appIcon = LoadAppIcon();
 
         _statusItem = new ToolStripMenuItem("Checking ChatGPT status…")
         {
@@ -60,7 +62,7 @@ internal sealed class WatchdogApplicationContext : ApplicationContext
 
         _trayIcon = new NotifyIcon
         {
-            Icon = SystemIcons.Application,
+            Icon = _appIcon,
             Text = "ChatGPT Watchdog",
             ContextMenuStrip = menu,
             Visible = true
@@ -174,15 +176,23 @@ internal sealed class WatchdogApplicationContext : ApplicationContext
         ExitThread();
     }
 
+    private static Icon LoadAppIcon()
+    {
+        var executablePath = Environment.ProcessPath;
+        return executablePath is not null
+            ? Icon.ExtractAssociatedIcon(executablePath) ?? (Icon)SystemIcons.Application.Clone()
+            : (Icon)SystemIcons.Application.Clone();
+    }
+
     protected override void Dispose(bool disposing)
     {
         if (disposing)
         {
             _timer.Dispose();
             _trayIcon.Dispose();
+            _appIcon.Dispose();
         }
 
         base.Dispose(disposing);
     }
 }
-
