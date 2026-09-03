@@ -171,18 +171,25 @@ internal sealed class WatchdogApplicationContext : ApplicationContext
         {
             Directory.CreateDirectory(_settingsStore.DataDirectory);
 
+            var directoryOpusRuntime = FindDirectoryOpusRuntime();
             var startInfo = new ProcessStartInfo
             {
-                FileName = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.Windows),
-                    "explorer.exe"),
+                FileName = directoryOpusRuntime ?? Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe"),
                 UseShellExecute = false
             };
+            if (directoryOpusRuntime is not null)
+            {
+                startInfo.ArgumentList.Add("/open");
+            }
+
             startInfo.ArgumentList.Add(_settingsStore.DataDirectory);
 
             Process.Start(startInfo);
             Log.Write(_settingsStore.DataDirectory,
-                $"Opened settings and log folder: {_settingsStore.DataDirectory}");
+                $"Opened settings and log folder using " +
+                $"{(directoryOpusRuntime is null ? "Explorer" : "Directory Opus")}: " +
+                _settingsStore.DataDirectory);
         }
         catch (Exception exception)
         {
@@ -194,6 +201,21 @@ internal sealed class WatchdogApplicationContext : ApplicationContext
                 $"Could not open {_settingsStore.DataDirectory}",
                 ToolTipIcon.Error);
         }
+    }
+
+    private static string? FindDirectoryOpusRuntime()
+    {
+        var programFilesFolders = new[]
+        {
+            Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
+            Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
+        };
+
+        return programFilesFolders
+            .Where(folder => !string.IsNullOrWhiteSpace(folder))
+            .Select(folder => Path.Combine(
+                folder, "GPSoftware", "Directory Opus", "dopusrt.exe"))
+            .FirstOrDefault(File.Exists);
     }
 
     private void ExitApplication()
