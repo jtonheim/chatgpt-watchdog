@@ -4,7 +4,7 @@ A small Windows system-tray application that keeps the ChatGPT desktop app runni
 
 Its violet and cyan ChatGPT-inspired icon distinguishes the watchdog from the standard ChatGPT application in the system tray.
 
-The watchdog checks for the `ChatGPT` process every 15 seconds. If monitoring is enabled and ChatGPT is not running, it launches the packaged desktop app through its version-independent Windows app identity. A 30-second cooldown prevents repeated launch attempts while ChatGPT starts or updates.
+The watchdog checks for a visible ChatGPT window every 15 seconds. Closing ChatGPT can leave several background helper processes alive, so process detection alone is not sufficient. If monitoring is enabled and no ChatGPT window is open, the watchdog launches the packaged desktop app through its version-independent Windows app identity. A 30-second cooldown prevents repeated launch attempts while ChatGPT starts or updates.
 
 ## Tray menu
 

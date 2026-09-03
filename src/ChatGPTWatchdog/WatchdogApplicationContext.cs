@@ -87,13 +87,19 @@ internal sealed class WatchdogApplicationContext : ApplicationContext
 
     private void CheckChatGpt()
     {
-        var running = ChatGptController.IsRunning();
-        _statusItem.Text = running ? "ChatGPT is running" : "ChatGPT is not running";
+        var state = ChatGptController.GetState();
+        var windowOpen = state == ChatGptState.WindowOpen;
+        _statusItem.Text = state switch
+        {
+            ChatGptState.WindowOpen => "ChatGPT window is open",
+            ChatGptState.BackgroundOnly => "ChatGPT window is closed",
+            _ => "ChatGPT is not running"
+        };
         _trayIcon.Text = _settings.MonitorEnabled
-            ? running ? "ChatGPT Watchdog — running" : "ChatGPT Watchdog — starting ChatGPT"
+            ? windowOpen ? "ChatGPT Watchdog — window open" : "ChatGPT Watchdog — starting ChatGPT"
             : "ChatGPT Watchdog — monitoring disabled";
 
-        if (_settings.MonitorEnabled && !running && DateTimeOffset.Now >= _nextLaunchAttempt)
+        if (_settings.MonitorEnabled && !windowOpen && DateTimeOffset.Now >= _nextLaunchAttempt)
         {
             StartChatGpt(manual: false);
         }
