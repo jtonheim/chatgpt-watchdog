@@ -45,5 +45,3 @@ dotnet build .\ChatGPTWatchdog.slnx --configuration Release
 ```
 
 Settings and logs are stored beside the installed executable and are not sent anywhere. With the default installation, this is `%LOCALAPPDATA%\ChatGPTWatchdog`.
-
-When Directory Opus is installed, the data-folder command uses its supported `dopusrt.exe /open` interface. Other systems fall back to Windows Explorer.
