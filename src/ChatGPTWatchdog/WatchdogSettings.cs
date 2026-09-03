@@ -27,7 +27,9 @@ internal sealed class SettingsStore
         {
             if (!File.Exists(SettingsPath))
             {
-                return new WatchdogSettings();
+                var defaultSettings = new WatchdogSettings();
+                Save(defaultSettings);
+                return defaultSettings;
             }
 
             var settings = JsonSerializer.Deserialize<WatchdogSettings>(
@@ -59,4 +61,3 @@ internal sealed class SettingsStore
         }
     }
 }
-

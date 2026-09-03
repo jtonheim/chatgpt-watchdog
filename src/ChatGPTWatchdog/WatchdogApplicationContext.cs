@@ -167,12 +167,33 @@ internal sealed class WatchdogApplicationContext : ApplicationContext
 
     private void OpenDataFolder()
     {
-        Directory.CreateDirectory(_settingsStore.DataDirectory);
-        Process.Start(new ProcessStartInfo
+        try
         {
-            FileName = _settingsStore.DataDirectory,
-            UseShellExecute = true
-        });
+            Directory.CreateDirectory(_settingsStore.DataDirectory);
+
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.Windows),
+                    "explorer.exe"),
+                UseShellExecute = false
+            };
+            startInfo.ArgumentList.Add(_settingsStore.DataDirectory);
+
+            Process.Start(startInfo);
+            Log.Write(_settingsStore.DataDirectory,
+                $"Opened settings and log folder: {_settingsStore.DataDirectory}");
+        }
+        catch (Exception exception)
+        {
+            Log.Write(_settingsStore.DataDirectory,
+                $"Could not open settings and log folder: {exception.Message}");
+            _trayIcon.ShowBalloonTip(
+                5000,
+                "ChatGPT Watchdog",
+                $"Could not open {_settingsStore.DataDirectory}",
+                ToolTipIcon.Error);
+        }
     }
 
     private void ExitApplication()
