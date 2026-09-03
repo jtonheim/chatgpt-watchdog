@@ -26,6 +26,12 @@ This project targets .NET 10 for Windows. From PowerShell:
 
 The installer publishes the application to `%LOCALAPPDATA%\ChatGPTWatchdog`, enables it at sign-in under `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`, removes the older direct `ChatGPT.lnk` startup shortcut if present, and starts the watchdog.
 
+To use a different stable install directory:
+
+```powershell
+.\scripts\install.ps1 -InstallPath 'D:\Applications\ChatGPTWatchdog'
+```
+
 ## Uninstall
 
 ```powershell
@@ -38,6 +44,6 @@ The installer publishes the application to `%LOCALAPPDATA%\ChatGPTWatchdog`, ena
 dotnet build .\ChatGPTWatchdog.slnx --configuration Release
 ```
 
-Settings and logs are stored locally under `%LOCALAPPDATA%\ChatGPTWatchdog` and are not sent anywhere.
+Settings and logs are stored beside the installed executable and are not sent anywhere. With the default installation, this is `%LOCALAPPDATA%\ChatGPTWatchdog`.
 
 When Directory Opus is installed, the data-folder command uses its supported `dopusrt.exe /open` interface. Other systems fall back to Windows Explorer.

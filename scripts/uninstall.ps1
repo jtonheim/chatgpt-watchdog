@@ -1,9 +1,10 @@
 [CmdletBinding()]
-param()
+param(
+    [string] $InstallPath = (Join-Path $env:LOCALAPPDATA 'ChatGPTWatchdog')
+)
 
 $ErrorActionPreference = 'Stop'
 
-$installPath = Join-Path $env:LOCALAPPDATA 'ChatGPTWatchdog'
 $runKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
 
 Get-Process -Name 'ChatGPTWatchdog' -ErrorAction SilentlyContinue |
@@ -17,4 +18,3 @@ if (Test-Path -LiteralPath $installPath)
 }
 
 Write-Output 'ChatGPT Watchdog uninstalled.'
-

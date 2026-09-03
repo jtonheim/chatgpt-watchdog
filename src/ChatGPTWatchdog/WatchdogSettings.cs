@@ -15,9 +15,8 @@ internal sealed class SettingsStore
         WriteIndented = true
     };
 
-    public string DataDirectory { get; } = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "ChatGPTWatchdog");
+    public string DataDirectory { get; } = Path.TrimEndingDirectorySeparator(
+        Path.GetFullPath(AppContext.BaseDirectory));
 
     private string SettingsPath => Path.Combine(DataDirectory, "settings.json");
 

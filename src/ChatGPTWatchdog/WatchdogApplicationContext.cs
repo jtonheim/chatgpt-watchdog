@@ -19,6 +19,7 @@ internal sealed class WatchdogApplicationContext : ApplicationContext
     public WatchdogApplicationContext()
     {
         _settings = _settingsStore.Load();
+        Log.Write(_settingsStore.DataDirectory, "Watchdog started.");
         _appIcon = LoadAppIcon();
 
         _statusItem = new ToolStripMenuItem("Checking ChatGPT status…")

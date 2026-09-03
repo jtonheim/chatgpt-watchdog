@@ -1,12 +1,13 @@
 [CmdletBinding()]
-param()
+param(
+    [string] $InstallPath = (Join-Path $env:LOCALAPPDATA 'ChatGPTWatchdog')
+)
 
 $ErrorActionPreference = 'Stop'
 
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $projectPath = Join-Path $projectRoot 'src\ChatGPTWatchdog\ChatGPTWatchdog.csproj'
 $publishPath = Join-Path $projectRoot 'artifacts\publish'
-$installPath = Join-Path $env:LOCALAPPDATA 'ChatGPTWatchdog'
 $installedExe = Join-Path $installPath 'ChatGPTWatchdog.exe'
 $runKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
 $legacyShortcut = Join-Path ([Environment]::GetFolderPath('Startup')) 'ChatGPT.lnk'
@@ -34,4 +35,3 @@ if (Test-Path -LiteralPath $legacyShortcut)
 Start-Process -FilePath $installedExe
 
 Write-Output "ChatGPT Watchdog installed to $installPath"
-
